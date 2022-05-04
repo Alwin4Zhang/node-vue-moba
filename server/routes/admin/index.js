@@ -1,5 +1,9 @@
 module.exports = app => {
     const express = require('express')
+    const jwt = require('jsonwebtoken')
+    const assert = require('http-assert')
+    const AdminUser = require('../../models/AdminUser')
+
     const router = express.Router({
         mergeParams: true
     })
@@ -42,10 +46,56 @@ module.exports = app => {
         const model = await req.Model.findById(req.params.id)
         res.send(model)
     })
+    const authMiddleware = require('../../middleware/auth')
+    const resourceMiddleware = require('../../middleware/resource')
+
     // 利用resource方法构建通用CRUD功能，利用中间件，链式处理，默认next函数时省略的
-    app.use('/admin/api/rest/:resource', async (req, res, next) => {
-        const modelName = require('inflection').classify(req.params.resource)
-        req.Model = require(`../../models/${modelName}`)
-        next()
-    }, router)
+    app.use('/admin/api/rest/:resource', authMiddleware(), resourceMiddleware(), router)
+
+
+    //处理上传数据 multer
+    const multer = require('multer')
+    const upload = multer({ dest: __dirname + '/../../uploads' })
+    app.post('/admin/api/upload', authMiddleware(), upload.single('file'), async (req, res) => {
+        const file = req.file
+        //拼接地址
+        file.url = `http://localhost:3000/uploads/${file.filename}`
+        res.send(file)
+    })
+
+
+    app.post('/admin/api/login', async (req, res) => {
+        const { username, password } = req.body //解构
+        // 1.根据用户名找用户
+        // 因为admin_user模型中select是默认不取出来，查询时需要强制取出,不然获取不到密码
+        const user = await AdminUser.findOne({ username }).select('+password')
+        // 2.校验密码 使用http-assert简化代码量
+        assert(user, 422, '用户不存在')
+        // if (!user) {
+        //     return res.status(422).send({
+        //         message: '用户不存在'
+        //     })
+        // }
+        const isValid = require('bcrypt').compareSync(password, user.password)
+        assert(isValid, 422, '密码错误')
+        // if (!isValid) {
+        //     return res.status(422).send({
+        //         message: '密码错误'
+        //     })
+        // }
+        // 3.返回token
+        const token = jwt.sign({
+            id: user._id,
+            // _id: user._id,
+            // username: user.username,
+        }, app.get('secret'))
+        res.send({ token })
+    })
+
+    // 错误处理函数
+    app.use(async (err, req, res, next) => {
+        res.status(err.statusCode || 500).send({
+            message: err.message
+        })
+    })
 }
