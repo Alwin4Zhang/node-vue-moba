@@ -13,18 +13,30 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.2em;
     background: #f1f1f1;
+    -webkit-font-smoothing: antialiased;
 }
 
 a {
     color: #999;
 }
+p {
+    line-height: 1.5em;
+}
 
 //colors
 $colors: (
     "primary": #db9e3f,
+    "info": #4b67af,
+    "danger": #791a15,
+    "blue-1": #1f3695,
+    "blue": #4394e4,
     "white": #fff,
+    "white-1": #fcfcfc,
+    "white-2": #eceef0,
     "light": #f9f9f9,
+    "light-1": #d4d9de,
     "grey": #999,
+    "grey-1": #666,
     "dark-1": #343440,
     "dark": #222,
     "black": #000,
@@ -42,13 +54,14 @@ $colors: (
 // text 工具类
 @each $var in (left, center, right) {
     .text-#{$var} {
-        text-align: $var;
+        text-align: $var !important;
     }
 }
 
 //font-size
-$bash-font-size: 1rem;
+$base-font-size: 1rem;
 $font-sizes: (
+    xxs: 0.6154,
     //10px
     xs: 0.7692,
     // 12px
@@ -58,12 +71,12 @@ $font-sizes: (
     // 14px
     lg: 1.0769,
     // 16px,
-    xl: 1.2308
+    xl: 1.2308,
 );
 
 @each $sizeKey, $size in $font-sizes {
     .fs-#{$sizeKey} {
-        font-size: $size * $bash-font-size;
+        font-size: $size * $base-font-size;
     }
 }
 
@@ -74,6 +87,10 @@ $font-sizes: (
 
 .flex-column {
     flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
 }
 
 $flex-jc: (
@@ -106,6 +123,9 @@ $flex-ai: (
 .flex-1 {
     //flex-grow-1
     flex: 1;
+}
+.flex-grow-1 {
+    flex-grow: 1;
 }
 
 //spacing
@@ -160,6 +180,25 @@ $spacing-sizes: (
             .#{$typeKey}#{$directionKey}-#{$sizeKey} {
                 #{$type}-#{$direction}: $size * $spacing-base-size;
             }
+        }
+    }
+}
+
+//button
+.btn {
+    border: none;
+    border-radius: 0.1538rem;
+    font-size: map-get($font-sizes, "sm") * $base-font-size;
+    padding: 0.2rem 0.6rem;
+}
+
+//nav
+.nav {
+    .nav-item {
+        border-bottom: 3px solid transparent;
+        padding-bottom: 0.2rem;
+        &.active {
+            border-bottom: 3px solid #fff;
         }
     }
 }
