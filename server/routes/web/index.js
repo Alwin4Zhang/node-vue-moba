@@ -38,6 +38,13 @@ module.exports = app => {
         const parent = await Category.findOne({
             name: '新闻分类'
         })
+        /* mongodb origin style aggregate pipeline
+        db.getCollection('categories').aggregate([
+            {"$match":{"parent":ObjectId('626a9ea9dd9fa7bcf0d32054')}},
+            {"$lookup":{"from":'articles',"localField":'_id',"foreignField":'categories','as':"newsList"}},
+            {"$addFields":{"newsList":{"$slice":["$newsList",0,5]}}}
+        ])
+        */
         const cats = await Category.aggregate([
             { $match: { parent: parent._id } },
             {
@@ -55,11 +62,11 @@ module.exports = app => {
             }
         ])
         const subCats = cats.map(v => v._id)
-        cats.unshift({
+        cats.unshift({ //数组前面添加内容
             name: '热门',
             newsList: await Article.find().where({
                 categories: { $in: subCats }
-            }).populate('categories').limit(5).lean()
+            }).populate('categories').limit(5).lean() //populate categories关联出_id对应的categories信息
         })
 
         cats.map(cat => {

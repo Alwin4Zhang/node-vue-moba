@@ -36,13 +36,22 @@
       <!--end of nav icons-->
       <m-list-card icon="menu1" title="新闻资讯" :categories="newsCats">
         <!--子组件ListCard的值给父组件用于展示 -->
-        <template #items="{category}">
-          <div class="py-2" v-for="(news,i) in category.newsList" :key="i">
-          <span>[{{news.categoryName}}]</span>
-          <span>|</span>
-          <span>{{news.title}}</span>
-          <span>{{news.date}}</span>
-        </div>
+        <template #items="{ category }">
+          <router-link
+            tag="div"
+            :to="`/articles/${news._id}`"
+            class="py-2 fs-lg d-flex"
+            v-for="(news, i) in category.newsList"
+            :key="i"
+          >
+          <!--todo:new-category-news -->
+            <span class="new-category new-category-news">{{ news.categoryName }}</span>
+            <span class="px-2">|</span>
+            <span class="flex-1 text-dark-1 text-ellipsis pr-2">{{
+              news.title
+            }}</span>
+            <span class="text-grey-1 fs-sm">{{ news.createAt | date }}</span>
+          </router-link>
         </template>
       </m-list-card>
       <m-card icon="card-hero" title="英雄列表"></m-card>
@@ -52,7 +61,17 @@
   </div>
 </template>
 <script>
+import dayjs from "dayjs";
+
 export default {
+  filters: {
+    date(val) {
+      return dayjs(val).format("MM/DD");
+    },
+    name2type(val){
+      return {"热门":""}// 放在filter不合适，应该在循环数据中带出来在赋值给class name
+    }
+  },
   data() {
     return {
       swiperOption: {
@@ -78,49 +97,18 @@ export default {
         "sprite sprite-ipgc": "IP共创计划",
         "sprite sprite-cyhdy": "创意互动营",
       },
-      newsCats:[
-        {
-          name:'热门',
-          newsList: new Array(5).fill(1).map(v=>({ 
-            categoryName:'公告',
-              title:'1让声音被看到，KPL无障碍直播间5月8日春决上线，与你同战！',
-              date:'05/06'
-          }))
-        },
-        {
-          name:'新闻',
-          newsList: new Array(5).fill(1).map(v=>({
-            categoryName:'新闻',
-              title:'2让声音被看到，KPL无障碍直播间5月8日春决上线，与你同战！',
-              date:'05/06'
-          }))
-        },
-        {
-          name:'新闻1',
-          newsList: new Array(5).fill(1).map(v=>({
-            categoryName:'新闻',
-              title:'3让声音被看到，KPL无障碍直播间5月8日春决上线，与你同战！',
-              date:'05/06'
-          }))
-        },
-        {
-          name:'新闻2',
-          newsList: new Array(5).fill(1).map(v=>({
-            categoryName:'新闻',
-              title:'4让声音被看到，KPL无障碍直播间5月8日春决上线，与你同战！',
-              date:'05/06'
-          }))
-        },
-        {
-          name:'新闻3',
-          newsList: new Array(5).fill(1).map(v=>({
-            categoryName:'新闻',
-              title:'5让声音被看到，KPL无障碍直播间5月8日春决上线，与你同战！',
-              date:'05/06'
-          }))
-        },
-      ]
+      newsCats: [],
     };
+  },
+  methods: {
+    async fetchNewCats() {
+      const res = await this.$http.get("news/list");
+      this.newsCats = res.data;
+      console.log(this.newsList);
+    },
+  },
+  created() {
+    this.fetchNewCats();
   },
 };
 </script>
@@ -148,5 +136,35 @@ export default {
       border-right: none;
     }
   }
+}
+
+.new-category {
+    border-radius: .05rem;
+    padding: .02rem .04rem;
+    border: 1px solid #f4be19;
+    color: #f4be19;
+    font-size: .2rem;
+    margin-right: .05rem;
+    vertical-align: bottom
+}
+
+.new-category-match {
+    border-color: #4d9cff;
+    color: #4d9cff
+}
+
+.new-category-news {
+    border-color: #1e96ab;
+    color: #1e96ab
+}
+
+.new-category-notice {
+    border-color: #f09a37;
+    color: #f09a37
+}
+
+.new-category-activity,.new-category-hot {
+    border-color: #ff3636;
+    color: #ff3636
 }
 </style>
