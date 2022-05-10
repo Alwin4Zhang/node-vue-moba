@@ -3,14 +3,14 @@
     <div class="topbar bg-black py-2 text-white px-3 d-flex ai-center">
       <img src="../assets/logo.png" height="30" />
       <div class="px-2 flex-1">
-        <div class="text-white">王者荣耀</div>
-        <div class="text-grey-1 fs-xxs">团队成就更多</div>
+        <div class="text-white text-left">王者荣耀</div>
+        <div class="text-grey-1 fs-xxs text-left">团队成就更多</div>
       </div>
       <button type="button" class="btn bg-primary">立即下载</button>
     </div>
     <div class="bg-primary pt-3 pb-2">
-      <div class="nav d-flex text-white jc-around pb-1">
-        <div class="nav-item active">
+      <div class="nav nav-inverse jc-around pb-1">
+        <div class="nav-item nav-inverse active">
           <router-link class="nav-link" tag="div" to="/">首页</router-link>
         </div>
         <div class="nav-item">
@@ -24,3 +24,12 @@
     <router-view></router-view>
   </div>
 </template>
+
+<style lang="scss">
+// 吸顶效果
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+</style>

@@ -1,4 +1,4 @@
-@import './variables';
+@import "./variables";
 
 // reset
 * {
@@ -116,22 +116,22 @@ p {
 }
 // button
 .btn {
-  border:none;
+  border: none;
   border-radius: 0.1538rem;
-  font-size: map-get($font-sizes, 'sm') * $base-font-size;
+  font-size: map-get($font-sizes, "sm") * $base-font-size;
   padding: 0.2rem 0.6rem;
   &.btn-lg {
     display: flex;
     justify-content: center;
     align-items: center;
     i {
-      color: map-get($colors, 'primary');
+      color: map-get($colors, "primary");
       font-weight: bold;
       font-size: 1.5rem;
       margin-right: 0.5rem;
     }
-    background: map-get($colors, 'white-1');
-    border: 1px solid map-get($colors, 'white-2');
+    background: map-get($colors, "white-1");
+    border: 1px solid map-get($colors, "white-2");
     padding: 0.8rem 1rem;
     font-size: 1rem;
   }
@@ -143,19 +143,18 @@ p {
     border-bottom: 3px solid transparent;
     padding-bottom: 0.2rem;
     &.active {
-      color: map-get($colors, 'primary');
-      border-bottom-color: map-get($colors, 'primary');
+      color: map-get($colors, "primary");
+      border-bottom-color: map-get($colors, "primary");
     }
   }
   &.nav-inverse {
     .nav-item {
-      color: map-get($colors, 'white');
+      color: map-get($colors, "white");
       &.active {
-        border-bottom-color: map-get($colors, 'white');
+        border-bottom-color: map-get($colors, "white");
       }
     }
   }
-  
 }
 
 // sprite
@@ -164,16 +163,104 @@ p {
   background-size: 28.8462rem;
   display: inline-block;
   &.sprite-news {
+    // 爆料站
     width: 1.7692rem;
     height: 1.5385rem;
     background-position: 63.546% 15.517%;
   }
-  &.sprite-arrow{
+
+  &.sprite-story {
+    // 故事站
+    width: 1.7692rem;
+    height: 1.5385rem;
+    background-position: 90.483% 15.614%;
+  }
+
+  &.sprite-shop {
+    // 周边商城
+    width: 1.4615rem;
+    height: 1.6923rem;
+    background-position: 36.746% 0.924%;
+  }
+
+  &.sprite-exp-serve {
+    // 体验服
+    width: 1.5385rem;
+    height: 1.5385rem;
+    background-position: 10.408% 15.517%;
+  }
+
+  &.sprite-fresh-man {
+    // 新人专区
+    width: 1.5385rem;
+    height: 1.6154rem;
+    background-position: 89.733% 1.266%;
+  }
+
+  &.sprite-reel-inherited {
+    // 卷轴传承
+    width: 1.8462rem;
+    height: 1.5385rem;
+    background-position: 36.467% 15.287%;
+  }
+
+  &.sprite-wzyd {
+    // 王者营地
+    width: 1.8462rem;
+    height: 1.8462rem;
+    background-position: 63.3% 0.927%;
+  }
+
+  &.sprite-weixin {
+    // 公众号
+    width: 1.8462rem;
+    height: 1.5385rem;
+    background-position: 0 96.207%;
+  }
+
+  &.sprite-arrow {
     width: 0.7692rem;
     height: 0.7692rem;
     background-position: 38.577% 52.076%;
   }
+
+  // 单独图标构建
+
+  &.sprite-version {
+    // 版本介绍
+    background: url("../images/version-icon.png") no-repeat 33.333% 33.333%;
+    background-size: 1.9231rem 1.9231rem;
+    width: 1.8462rem;
+    height: 1.8462rem;
+  }
+
+  &.sprite-ipgc {
+    // IP共创计划
+    background: url("../images/ipgc2.png") no-repeat 52.174% 50%;
+    background-size: 3.8462rem 3.8462rem;
+    width: 2.6923rem;
+    height: 2.6923rem;
+  }
+
+  &.sprite-djhj {
+    // 对局环境
+    background: url("../images/djhj.png") no-repeat 0 0;
+    background-size: 2.6154rem 2.6154rem;
+    width: 2.6154rem;
+    height: 1.6154rem;
+  }
+
+  &.sprite-cyhdy {
+    // 创意互动营
+    background: url("../images/cyhdy.png") no-repeat 50% 50%;
+    background-size: 3.6923rem 3.6923rem;
+    width: 2.3077rem;
+    height: 2.3077rem;
+  }
 }
+
+
+
 // borders
 @each $dir in (top, right, bottom, left) {
   .border-#{$dir} {

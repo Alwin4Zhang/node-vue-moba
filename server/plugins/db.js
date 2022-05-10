@@ -5,4 +5,6 @@ module.exports = app => {
         useFindAndModify: true,
         useCreateIndex: true,
     })
+
+    require('require-all')(__dirname + '/../models')
 }
