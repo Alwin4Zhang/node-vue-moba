@@ -44,8 +44,10 @@
             v-for="(news, i) in category.newsList"
             :key="i"
           >
-          <!--todo:new-category-news -->
-            <span class="new-category new-category-news">{{ news.categoryName }}</span>
+            <!--todo:new-category-news -->
+            <span class="new-category new-category-news">{{
+              news.categoryName
+            }}</span>
             <span class="px-2">|</span>
             <span class="flex-1 text-dark-1 text-ellipsis pr-2">{{
               news.title
@@ -54,7 +56,17 @@
           </router-link>
         </template>
       </m-list-card>
-      <m-card icon="card-hero" title="英雄列表"></m-card>
+
+      <m-list-card icon="card-hero" title="英雄列表" :categories="heroCats">
+        <template #items="{ category }">
+          <div class="d-flex flex-wrap" style="margin:0 -0.5rem">
+            <div class="p-2 text-center" style="width:20%" v-for="(hero, i) in category.heroList" :key="i">
+              <img :src="hero.avatar" alt="" class="w-100">
+              <div>{{ hero.name }}</div>
+            </div>
+          </div>
+        </template>
+      </m-list-card>
       <m-card icon="menu1" title="精彩视频"></m-card>
       <m-card icon="menu1" title="百态王者"></m-card>
     </div>
@@ -68,9 +80,9 @@ export default {
     date(val) {
       return dayjs(val).format("MM/DD");
     },
-    name2type(val){
-      return {"热门":""}// 放在filter不合适，应该在循环数据中带出来在赋值给class name
-    }
+    name2type(val) {
+      return { 热门: "" }; // 放在filter不合适，应该在循环数据中带出来在赋值给class name
+    },
   },
   data() {
     return {
@@ -98,6 +110,7 @@ export default {
         "sprite sprite-cyhdy": "创意互动营",
       },
       newsCats: [],
+      heroCats: [],
     };
   },
   methods: {
@@ -106,9 +119,14 @@ export default {
       this.newsCats = res.data;
       console.log(this.newsList);
     },
+    async fetchHeroCats() {
+      const res = await this.$http.get("heroes/list");
+      this.heroCats = res.data;
+    },
   },
   created() {
     this.fetchNewCats();
+    this.fetchHeroCats();
   },
 };
 </script>
@@ -139,32 +157,33 @@ export default {
 }
 
 .new-category {
-    border-radius: .05rem;
-    padding: .02rem .04rem;
-    border: 1px solid #f4be19;
-    color: #f4be19;
-    font-size: .2rem;
-    margin-right: .05rem;
-    vertical-align: bottom
+  border-radius: 0.05rem;
+  padding: 0.02rem 0.04rem;
+  border: 1px solid #f4be19;
+  color: #f4be19;
+  font-size: 0.2rem;
+  margin-right: 0.05rem;
+  vertical-align: bottom;
 }
 
 .new-category-match {
-    border-color: #4d9cff;
-    color: #4d9cff
+  border-color: #4d9cff;
+  color: #4d9cff;
 }
 
 .new-category-news {
-    border-color: #1e96ab;
-    color: #1e96ab
+  border-color: #1e96ab;
+  color: #1e96ab;
 }
 
 .new-category-notice {
-    border-color: #f09a37;
-    color: #f09a37
+  border-color: #f09a37;
+  color: #f09a37;
 }
 
-.new-category-activity,.new-category-hot {
-    border-color: #ff3636;
-    color: #ff3636
+.new-category-activity,
+.new-category-hot {
+  border-color: #ff3636;
+  color: #ff3636;
 }
 </style>
