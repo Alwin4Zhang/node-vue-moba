@@ -765,25 +765,23 @@ module.exports = app => {
             }
         ]
 
-        for(let cat of rawData){
-            if(cat.name === '热门'){
+        for (let cat of rawData) {
+            if (cat.name === '热门') {
                 continue
             }
             // 找到当前分类在DB中对应的数据
             const category = await Category.findOne({
-                name:cat.name
+                name: cat.name
             })
 
-            cat.heroes = cat.heroes.map(hero =>{
+            cat.heroes = cat.heroes.map(hero => {
                 hero.categories = [category]
                 return hero
             })
-            console.log(cat)
             // 录入英雄
             await Hero.insertMany(cat.heroes)
-
-            res.send(await Hero.find())
         }
+        res.send(await Hero.find())
     })
 
     // 英雄列表接口
@@ -801,7 +799,7 @@ module.exports = app => {
         const cats = await Category.aggregate([
             { $match: { parent: parent._id } },
             {
-                $lookup: {  
+                $lookup: {
                     from: 'heroes',
                     localField: '_id',
                     foreignField: 'categories',
@@ -819,6 +817,20 @@ module.exports = app => {
         res.send(cats)
     })
 
+    // 文章详情
+    router.get('/articles/:id', async (req, res) => {
+        const data = await Article.findById(req.params.id).lean()
+        data.related = await Article.find().where({
+            categories: { $in: data.categories }
+        }).limit(2)
+        res.send(data)
+    })
+
+    // 英雄详情
+    router.get('/heroes/:id', async (req, res) => {
+        const data = await Hero.findById(req.params.id).lean()
+        res.send(data)
+    })
 
     app.use('/web/api', router)
 }

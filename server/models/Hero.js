@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const schema = new mongoose.Schema({
     name: { type: String },
     avatar: { type: String },
+    banner: { type: String }, // 背景图片
     title: { type: String },
     categories: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }], // 一个英雄可能是多个身份
     scores: {
