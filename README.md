@@ -1,7 +1,7 @@
 # 【全栈之巅】Node.js + Vue.js 全栈开发王者荣耀手机端官网和管理后台
 > 本项目是参考[Bilibili 全栈之巅](https://space.bilibili.com/341919508) 视频教程自己实现的源码
 # node-vue-moba
-王者荣耀手机端官网  design by express.js + vue.js
+王者荣耀手机端官网  design by express.js + vue.js + element-ui
 
 ## 一、 入门
 1. 项目介绍
