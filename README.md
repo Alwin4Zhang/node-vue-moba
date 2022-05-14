@@ -63,3 +63,8 @@
 1. 英雄详情页-2-后台编辑
 1. 英雄详情页-3-前端顶部
 1. 英雄详情页-4-完善
+
+### 缩略图
+![avatar](../node-vue-moba/screenshot/images.gif)
+
+![avatar](../node-vue-moba/screenshot/1652522058955.gif)
