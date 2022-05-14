@@ -34,6 +34,14 @@ $font-sizes: (
     xl: 1.2308,
   //16px,,,,
 );
+
+$font-weights:(
+  normal:normal,
+  bold:bold,
+  bolder:bolder,
+  lighter:lighter
+);
+
 $flex-jc: (
   start: flex-start,
   end: flex-end,

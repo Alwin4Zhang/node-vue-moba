@@ -37,11 +37,20 @@ p {
   }
 }
 
+// font-sizes
 @each $sizeKey, $size in $font-sizes {
   .fs-#{$sizeKey} {
     font-size: $size * $base-font-size;
   }
 }
+
+// font-weights
+@each $weightKey,$weight in $font-weights {
+  .fs-#{$weightKey}{
+    font-weight: $weight;
+  }
+}
+
 // text overflow
 .text-ellipsis {
   display: inline-block;

@@ -16,6 +16,8 @@ const schema = new mongoose.Schema({
         icon: { type: String },
         name: { type: String },
         description: { type: String },
+        delay: { type: String },
+        cost: { type: String },
         tips: { type: String }
     }],
     items1: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Item' }], // 顺风出装
@@ -23,7 +25,18 @@ const schema = new mongoose.Schema({
     usageTips: { type: String }, //使用技巧
     battleTips: { type: String }, //对抗技巧
     teamTips: { type: String }, //团战思路
+    // 最佳搭档
     partners: [{
+        hero: { type: mongoose.SchemaTypes.ObjectId, ref: 'Hero' },
+        description: { type: String }
+    }],
+    // 克制谁
+    restraintHeros: [{
+        hero: { type: mongoose.SchemaTypes.ObjectId, ref: 'Hero' },
+        description: { type: String }
+    }],
+    // 被谁克制
+    restrainedHeros: [{
         hero: { type: mongoose.SchemaTypes.ObjectId, ref: 'Hero' },
         description: { type: String }
     }]

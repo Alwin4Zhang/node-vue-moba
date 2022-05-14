@@ -9,8 +9,167 @@
       <router-link to="/" tag="div">更多英雄 &gt; </router-link>
     </div>
 
-    <div></div>
-    <h1>{{ model.name }}</h1>
+    <div class="top" :style="{ 'background-image': `url(${model.banner})` }">
+      <div class="info text-white p-3 h-100 d-flex flex-column jc-end">
+        <div class="text-left fs-sm">{{ model.title }}</div>
+        <h2 class="my-2 text-left">{{ model.name }}</h2>
+        <div class="text-left fs-sm">
+          {{ model.categories.map((v) => v.name).join("/") }}
+        </div>
+        <div class="d-flex jc-between">
+          <div class="scores d-flex ai-center pt-2" v-if="model.scores">
+            <span>难度</span>
+            <span class="badge bg-primary">{{ model.scores.difficult }}</span>
+            <span>技能</span>
+            <span class="badge bg-blue-1">{{ model.scores.skills }}</span>
+            <span>攻击</span>
+            <span class="badge bg-danger">{{ model.scores.attack }}</span>
+            <span>生存</span>
+            <span class="badge bg-dark">{{ model.scores.survive }}</span>
+          </div>
+        </div>
+        <router-link to="/" tag="span" class="text-grey fs-sm text-right">
+          皮肤: 2 &gt;
+        </router-link>
+      </div>
+      <!-- end of top -->
+      <div>
+        <div class="bg-white px-3">
+          <div class="nav d-flex jc-around pt-3 pb-2 border-bottom">
+            <div class="nav-item active">
+              <div class="nav-link">英雄初识</div>
+            </div>
+            <div class="nav-item">
+              <div class="nav-link">进阶攻略</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <swiper>
+        <swiper-slide>
+          <div>
+            <div class="p-3 bg-white border-bottom">
+              <div class="d-flex">
+                <router-link tag="button" to="/" class="btn btn-lg flex-1">
+                  <i class="iconfont icon-menu1"></i>
+                  英雄介绍视频
+                </router-link>
+                <router-link tag="button" to="/" class="btn btn-lg flex-1 ml-2">
+                  <i class="iconfont icon-menu1"></i>
+                  一图识英雄
+                </router-link>
+              </div>
+              <!-- skills -->
+              <div class="skills bg-white mt-4">
+                <div class="d-flex jc-around">
+                  <!--@click点击谁索引就变为i  active:true-->
+                  <img
+                    class="icon"
+                    @click="currentSkillIndex = i"
+                    :class="{ active: currentSkillIndex === i }"
+                    :src="item.icon"
+                    v-for="(item, i) in model.skills"
+                    :key="item.name"
+                    alt=""
+                  />
+                </div>
+                <div v-if="currentSkill">
+                  <div class="d-flex pt-4 pb-3">
+                    <h3 class="text-left m-0 text-dark">
+                      {{ currentSkill.name }}
+                    </h3>
+                    <span class="text-grey-1 ml-4">
+                      (冷却值：{{ currentSkill.delay }} 消耗：{{
+                        currentSkill.cost
+                      }})
+                    </span>
+                  </div>
+                  <p class="text-dark text-left">
+                    {{ currentSkill.description.trim() }}
+                  </p>
+                  <div class="border-bottom"></div>
+                  <p class="text-grey text-left">
+                    小提示： {{ currentSkill.tips }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <m-card plain icon="menu1" title="出装推荐" class="hero-items text-dark">
+              <div class="fs-xl text-left">顺风出装</div>
+              <div class="d-flex jc-around text-center mt-3">
+                <div v-for="item in model.items1" :key="item.name">
+                  <img :src="item.icon" class="icon" alt="" />
+                  <div>{{ item.name }}</div>
+                </div>
+              </div>
+              <div class="border-bottom mt-3"></div>
+              <div class="fs-xl text-left mt-3">逆风出装</div>
+              <div class="d-flex jc-around text-center mt-3">
+                <div v-for="item in model.items2" :key="item.name">
+                  <img :src="item.icon" class="icon" alt="" />
+                  <div>{{ item.name }}</div>
+                </div>
+              </div>
+            </m-card>
+            <m-card plain icon="menu1" title="使用技巧" class="text-dark">
+              <div class="text-left m-0">{{ model.usageTips }}</div>
+            </m-card>
+            <m-card plain icon="menu1" title="对抗技巧" class="text-dark">
+              <div class="text-left m-0">{{ model.battleTips }}</div>
+            </m-card>
+            <m-card plain icon="menu1" title="团战思路" class="text-dark">
+              <div class="text-left m-0">{{ model.teamTips }}</div>
+            </m-card>
+            <m-card plain icon="menu1" title="英雄关系" class="hero-relations text-dark">
+              <div class="fs-lg text-left py-2">最佳搭档</div>
+              <div class="text-left">
+                <div
+                  class="d-flex py-2"
+                  v-for="item in model.partners"
+                  :key="item._id"
+                >
+                  <img :src="item.hero.avatar" class="icon" alt="" />
+                  <p class="flex-1 m-0 ml-3">
+                    {{ item.hero.name }} : {{ item.description }}
+                  </p>
+                </div>
+              </div>
+              <div class="border-bottom mt-3"></div>
+              <div class="fs-lg text-left py-2">被谁克制</div>
+              <div class="text-left">
+                <div
+                  class="d-flex py-2"
+                  v-for="item in model.restrainedHeros"
+                  :key="item._id"
+                >
+                  <img :src="item.hero.avatar" class="icon" alt="" />
+                  <p class="flex-1 m-0 ml-3">
+                    {{ item.hero.name }}{{ item.description }}
+                  </p>
+                </div>
+              </div>
+              <div class="border-bottom mt-3"></div>
+              <div class="fs-lg text-left py-2">克制谁</div>
+              <div class="text-left">
+                <div
+                  class="d-flex py-2"
+                  v-for="item in model.restraintHeros"
+                  :key="item._id"
+                >
+                  <img :src="item.hero.avatar" class="icon" alt="" />
+                  <p class="flex-1 m-0 ml-3">
+                    {{ item.hero.name }}: {{ item.description }}
+                  </p>
+                </div>
+              </div>
+              <div class="border-bottom mt-3"></div>
+            </m-card>
+          </div>
+        </swiper-slide>
+        <swiper-slide></swiper-slide>
+      </swiper>
+    </div>
   </div>
 </template>
 
@@ -22,16 +181,77 @@ export default {
   data() {
     return {
       model: null,
+      currentSkillIndex: 0, // 记录当前高亮的索引值
     };
+  },
+  computed: {
+    // 计算属性，监听某个值做操作
+    currentSkill() {
+      return this.model.skills[this.currentSkillIndex];
+    },
   },
   methods: {
     async fetch() {
       const res = await this.$http.get(`heroes/${this.id}`);
-      this.model = res.data
+      this.model = res.data;
     },
   },
   created() {
-    this.fetch()
+    this.fetch();
   },
 };
 </script>
+
+<style lang="scss">
+@import "../assets/scss/_variables.scss";
+.page-hero {
+  .top {
+    height: 50vw;
+    background: #fff no-repeat top center;
+    background-size: 100% 100%;
+  }
+
+  .info {
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+    .scores {
+      .badge {
+        margin: 0 0.25rem;
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        line-height: 0.9rem;
+        text-align: center;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+
+  .skills {
+    img.icon {
+      width: 70px;
+      height: 70px;
+      border: 3px solid map-get($colors, "white");
+      &.active {
+        border: 3px solid map-get($colors, "primary");
+      }
+      border-radius: 50%;
+    }
+  }
+  .hero-items {
+      img.icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+      }
+  }
+
+  .hero-relations{
+    img.icon {
+        width: 45px;
+        height: 45px;
+      }
+  }
+}
+</style>

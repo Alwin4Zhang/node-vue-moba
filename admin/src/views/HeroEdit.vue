@@ -16,7 +16,7 @@
               :action="uploadUrl"
               :headers="getAuthHeaders()"
               :show-file-list="false"
-              :on-success="res => $set(model,'avatar',res.url)"
+              :on-success="(res) => $set(model, 'avatar', res.url)"
             >
               <img v-if="model.avatar" :src="model.avatar" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -29,7 +29,7 @@
               :action="uploadUrl"
               :headers="getAuthHeaders()"
               :show-file-list="false"
-              :on-success="res => $set(model,'banner',res.url)"
+              :on-success="(res) => $set(model, 'banner', res.url)"
             >
               <img v-if="model.banner" :src="model.banner" class="avatar" />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -129,6 +129,13 @@
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
+              <el-form-item label="冷却值">
+                <el-input v-model="item.delay"></el-input>
+              </el-form-item>
+              <el-form-item label="消耗">
+                <el-input v-model="item.cost"></el-input>
+              </el-form-item>
+
               <el-form-item label="描述">
                 <el-input v-model="item.description" type="textarea"></el-input>
               </el-form-item>
@@ -140,6 +147,103 @@
                   size="small"
                   type="danger"
                   @click="model.skills.splice(i, 1)"
+                  >删除</el-button
+                >
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+
+        <el-tab-pane label="最佳搭档" name="partners">
+          <el-button size="small" @click="model.partners.push({})"
+            ><i class="el-icon-plus"></i>添加英雄</el-button
+          >
+          <el-row type="flex" style="flex-wrap: wrap">
+            <el-col :md="12" v-for="(item, i) in model.partners" :key="i">
+              <el-form-item label="名称">
+                <el-select filterable v-model="item.hero">
+                  <el-option
+                    v-for="hero in heroes"
+                    :key="hero._id"
+                    :value="hero._id"
+                    :label="hero.name"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="描述">
+                <el-input v-model="item.description" type="textarea"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click="model.partners.splice(i, 1)"
+                  >删除</el-button
+                >
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+
+        <el-tab-pane label="被谁克制" name="restrainedHeros">
+          <el-button size="small" @click="model.restrainedHeros.push({})"
+            ><i class="el-icon-plus"></i>添加英雄</el-button
+          >
+          <el-row type="flex" style="flex-wrap: wrap">
+            <el-col
+              :md="12"
+              v-for="(item, i) in model.restrainedHeros"
+              :key="i"
+            >
+              <el-form-item label="名称">
+                <el-select filterable v-model="item.hero">
+                  <el-option
+                    v-for="hero in heroes"
+                    :key="hero._id"
+                    :value="hero._id"
+                    :label="hero.name"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="描述">
+                <el-input v-model="item.description" type="textarea"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click="model.restrainedHeros.splice(i, 1)"
+                  >删除</el-button
+                >
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+
+        <el-tab-pane label="克制谁" name="restraintHeros">
+          <el-button size="small" @click="model.restraintHeros.push({})"
+            ><i class="el-icon-plus"></i>添加英雄</el-button
+          >
+          <el-row type="flex" style="flex-wrap: wrap">
+            <el-col :md="12" v-for="(item, i) in model.restraintHeros" :key="i">
+              <el-form-item label="名称">
+                <el-select filterable v-model="item.hero">
+                  <el-option
+                    v-for="hero in heroes"
+                    :key="hero._id"
+                    :value="hero._id"
+                    :label="hero.name"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="描述">
+                <el-input v-model="item.description" type="textarea"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click="model.restraintHeros.splice(i, 1)"
                   >删除</el-button
                 >
               </el-form-item>
@@ -165,10 +269,15 @@ export default {
     return {
       categories: [],
       items1: [],
+      heroes: [],
       // 如果对象属性预先定义后，之后不用显式赋值
       model: {
         name: "",
         avatar: "",
+        skills: [], // 技能
+        partners: [], //最佳搭档
+        restraintHeros: [], //克制谁
+        restrainedHeros: [], //被谁克制
         scores: {
           difficult: 0,
           skills: 0,
@@ -193,7 +302,7 @@ export default {
       }
       console.log(res);
       // 这里没有添加rest前缀是因为是路径跳转页面，跳转页面后会自动刷新数据
-      this.$router.push(`/heroes/list`);
+      // this.$router.push(`/heroes/list`);
       this.$message({
         type: "success",
         message: "保存成功!",
@@ -215,10 +324,30 @@ export default {
       const res = await this.$http.get(`rest/items`);
       this.items = res.data;
     },
+
+    async fetchHeroes() {
+      const res = await this.$http.get(`rest/heroes`);
+      console.log(res.data)
+      this.heroes = res.data;
+    },
+
+    async fetchRestraintHeros() {
+      const res = await this.$http.get(`rest/heroes`);
+      this.restraintHeros = res.data;
+    },
+
+    async fetchRestrainedHeros() {
+      const res = await this.$http.get(`rest/heroes`);
+      console.log(res.data)
+      this.restraintHeros = res.data;
+    },
   },
   created() {
     this.fetchItems();
     this.fetchCategories();
+    this.fetchHeroes();
+    this.fetchRestraintHeros();
+    this.fetchRestrainedHeros();
     //当跳入页面时，id存在时才fetch
     this.id && this.fetch();
   },
