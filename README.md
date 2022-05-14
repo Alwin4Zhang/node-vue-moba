@@ -65,6 +65,6 @@
 1. 英雄详情页-4-完善
 
 ### 缩略图
-![avatar](../node-vue-moba/screenshot/images.gif)
+![avatar](https://github.com/Alwin4Zhang/node-vue-moba/blob/main/screenshot/images.gif)
 
-![avatar](../node-vue-moba/screenshot/1652522058955.gif)
+![avatar](https://github.com/Alwin4Zhang/node-vue-moba/blob/main/screenshot/1652522058955.gif)
